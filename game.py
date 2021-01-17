@@ -150,7 +150,7 @@ def play(game, x_player, o_player, print_game=True):
             X = X_PLAYER_SYMBOL
             current_player = O_PLAYER_SYMBOL if current_player == X else X
 
-        time.sleep(.8)
+        time.sleep(.5)
 
     if print_game:
         print("It's a tie!")
