@@ -1,11 +1,15 @@
 import time
 from player import HumanPlayer, RandomComputerPlayer
 
+O_PLAYER_SYMBOL = 'O'
+X_PLAYER_SYMBOL = 'X'
+EMPTY_SYMBOL = ' '
+
 
 class TicTacToe:
 
     def __init__(self):
-        self.board = [[None] * 3 for _ in range(3)]
+        self.board = [[EMPTY_SYMBOL] * 3 for _ in range(3)]
         self.current_winner = None
         self.board_mapping = self.populate_mappings()
 
@@ -27,8 +31,14 @@ class TicTacToe:
                 return key
 
     def print_board(self):
-        for row in self.board:
-            print(row)
+        n = len(self.board)
+
+        for row in range(n):
+            print('| ', end='')
+            for col in range(n):
+                val = self.board[row][col]
+                print(val, end=' | ')
+            print()
 
     def print_positions(self):
         n = len(self.board)
@@ -48,13 +58,13 @@ class TicTacToe:
 
         for i in range(n):
             for j in range(n):
-                if self.board[i][j] is None:
+                if self.board[i][j] == EMPTY_SYMBOL:
                     moves.append((i, j))
         return moves
 
     def has_empty_spots(self):
         for row in self.board:
-            if None in row:
+            if EMPTY_SYMBOL in row:
                 return True
 
         return False
@@ -65,7 +75,7 @@ class TicTacToe:
     def make_move(self, spot, letter):
         row, col = spot
 
-        if self.board[row][col] is None:
+        if self.board[row][col] == EMPTY_SYMBOL:
             self.board[row][col] = letter
 
             if self.winner(spot, letter):
@@ -113,40 +123,42 @@ class TicTacToe:
 def play(game, x_player, o_player, print_game=True):
     if print_game:
         game.print_positions()
+        print('Press Q to exit!', end='\n\n')
 
-    letter = 'X'
+    current_player = O_PLAYER_SYMBOL
 
     while game.has_empty_spots():
-        if letter == 'O':
+        if current_player == X_PLAYER_SYMBOL:
             spot = o_player.get_move(game)
         else:
             spot = x_player.get_move(game)
 
-        if game.make_move(spot, letter):
+        if game.make_move(spot, current_player):
             square = game.get_spot_rep(spot)
 
             if print_game:
-                print(f'{letter} makes move to spot {square}')
+                print(f'{current_player} makes move to spot {square}')
                 game.print_board()
                 print()
 
             if game.current_winner:
                 if print_game:
-                    print(f'{letter} WINS!!!!')
+                    print(f'{current_player} WINS!!!!')
                 return
 
             # Alternate letters
-            letter = 'O' if letter == 'X' else 'X'
+            X = X_PLAYER_SYMBOL
+            current_player = O_PLAYER_SYMBOL if current_player == X else X
 
-        # time.sleep(.8)
+        time.sleep(.8)
 
     if print_game:
         print("It's a tie!")
 
 
 if __name__ == '__main__':
-    x_player = HumanPlayer('X')
-    o_player = RandomComputerPlayer('O')
+    x_player = HumanPlayer(X_PLAYER_SYMBOL)
+    o_player = RandomComputerPlayer(O_PLAYER_SYMBOL)
     ttt = TicTacToe()
     # ttt.print_positions()
     # print(ttt.board_mapping)

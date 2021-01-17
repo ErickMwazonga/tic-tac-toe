@@ -31,11 +31,14 @@ class HumanPlayer(Player):
         val = None
 
         while not valid_spot:
-            spot = input(f"{self.letter} turn. Input spot: ")
+            spot = input(f"{self.letter} turn. Choose spot(1-9): ")
+
+            if spot == 'Q' or spot == 'q':
+                quit()
 
             try:
                 spot = int(spot)
-                val = game.board_mapping[spot]
+                val = game.board_mapping.get(spot)
 
                 if val not in game.available_moves():
                     raise ValueError
